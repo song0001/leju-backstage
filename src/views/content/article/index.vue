@@ -5,33 +5,74 @@
         <span>条件查询</span>
       </div>
       <div>
-        <el-form 
-         :inline="true"
+        <el-form
           :model="ruleForm"
           ref="ruleForm"
           label-width="100px"
           class="demo-ruleForm"
         >
-          <el-form-item label="作者" prop="author" >
-            <el-input  v-model="ruleForm.author" placeholder="作者"  label-width="100px"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
-            <el-button type="primary" @click="submitForm('ruleForm')"
-              >搜索</el-button
-            >
-          </el-form-item>
+          <el-row>
+            <el-col :span="6">
+              <el-form-item label="作者" prop="author">
+                <el-input
+                  v-model="ruleForm.author"
+                  placeholder="作者"
+                  label-width="100px"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="标题" prop="title">
+                <el-input
+                  v-model="ruleForm.title"
+                  placeholder="标题"
+                  label-width="100px"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="编辑类型" prop="editorType">
+                <el-select v-model="ruleForm.editorType" placeholder="编辑类型">
+                  <el-option label="富文本" :value="0"></el-option>
+                  <el-option label="markDown" :value="1"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="6" :offset="18">
+              <el-form-item>
+                <el-button size="mini" @click="resetForm('ruleForm')"
+                  >重置</el-button
+                >
+                <el-button
+                  size="mini"
+                  type="primary"
+                  @click="submitForm('ruleForm')"
+                  >搜索</el-button
+                >
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-form>
       </div>
     </el-card>
     <el-card class="card">
+      <el-button type="primary" size="mini" @click="addContent">新增</el-button>
+      <el-divider></el-divider>
       <el-table
         v-loading="listLoading"
         :data="articleList"
         border
         style="width: 100%"
       >
-        <el-table-column type="index" width="50" fixed="left"></el-table-column>
+        <el-table-column
+          type="index"
+          width="50"
+          fixed="left"
+          label="#"
+          align="center"
+        ></el-table-column>
         <el-table-column
           fixed
           align="center"
@@ -67,6 +108,7 @@
               v-model="scope.row.isShow"
               :active-value="1"
               :inactive-value="0"
+              @change="showChange(scope.row)"
             >
             </el-switch>
           </template>
@@ -106,7 +148,11 @@
 </template>
    
 <script>
-import { getArticleList, delArticle } from "@/api/content/article";
+import {
+  getArticleList,
+  delArticle,
+  changeShowStatus,
+} from "@/api/content/article";
 import mixin from "@/mixins";
 export default {
   mixins: [mixin],
@@ -114,9 +160,11 @@ export default {
     return {
       listLoading: false, // 文章列表加载动画
       articleList: [], // 文章数据数组
-      ruleForm:{
-        author:''
-      }
+      ruleForm: {
+        author: "",
+        title: "",
+        editorType: "",
+      },
     };
   },
   created() {
@@ -126,17 +174,19 @@ export default {
     init() {
       this.listLoading = true;
       // 获取文章列表
-      getArticleList(this.page.currentPage, this.page.size, {}).then((res) => {
-        console.log(res);
-        if (res.success) {
-          this.articleList = res.data.rows;
-          // 声明多少条数据
-          this.page.total = res.data.total;
-        } else {
-          this.$message.error("请求失败");
+      getArticleList(this.page.currentPage, this.page.size, this.ruleForm).then(
+        (res) => {
+          console.log(res);
+          if (res.success) {
+            this.articleList = res.data.rows;
+            // 声明多少条数据
+            this.page.total = res.data.total;
+          } else {
+            this.$message.error("请求失败");
+          }
+          this.listLoading = false;
         }
-        this.listLoading = false;
-      });
+      );
     },
     handleSizeChange(e) {
       console.log(e);
@@ -150,7 +200,9 @@ export default {
       this.init();
     },
     // 修改文章
-    edit(row) {},
+    edit(row) {
+      this.$router.push({name:'EditArticle',params:{id:row.id}})
+    },
     // 删除
     del(row) {
       this.$confirm("此操作将永久删除该文章, 是否继续?", "提示", {
@@ -171,10 +223,36 @@ export default {
       });
     },
     // 重置表单
-    resetForm(ruleForm){
-      console.log(111)
-  this.$refs[ruleForm].resetFields();
-    }
+    resetForm(ruleForm) {
+      console.log(111);
+      this.$refs[ruleForm].resetFields();
+    },
+    // 搜索
+    submitForm() {
+      // 每次模糊查询时,应该让我们的分页变成第一页
+      this.page.currentPage = 1;
+      this.init();
+    },
+    // 更新文章显示状态
+    showChange(row) {
+      changeShowStatus({
+        id: row.id,
+        isShow: row.isShow,
+      }).then((res) => {
+        // console.log(res);
+        var tempStatus = row.isShow === 0 ? 1 : 0;
+        if (res.success) {
+          this.$message.success("更新文章状态成功");
+        } else {
+          this.$message.error("更新显示状态失败");
+          row.isShow=tempStatus
+        }
+      });
+    },
+    // 新增文章
+    addContent() {
+      this.$router.push('addArticle')
+    },
   },
 };
 </script>

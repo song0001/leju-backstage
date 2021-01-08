@@ -16,7 +16,7 @@ export function getToken() {
 }
 // 获取userInfo
 export function getUserInfo() {
-    return window.localStorage.getItem(user_info)
+    return JSON.parse(window.localStorage.getItem(user_info))
 }
 
 // 删除token

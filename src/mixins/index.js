@@ -1,3 +1,5 @@
+import { getToken } from '@/utils/myAuth'
+
 export default {
     data() {
         return {
@@ -6,6 +8,10 @@ export default {
                 size: 10,
                 pageSizes: [10, 20, 30, 40], // pageSizes得是 pageSize的整数倍
                 total: 0
+            },
+            uploadUrl: '/lejuAdmin/material/uploadFileOss',
+            uploadHeaders: {
+                token: getToken()
             }
         }
     },

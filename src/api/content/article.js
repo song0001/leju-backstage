@@ -14,8 +14,45 @@ function delArticle(id) {
         method: 'DELETE'
     })
 }
+//  更新文章状态
+function changeShowStatus(data) {
+    return request({
+        url: `/lejuAdmin/productArticle/changeShowStatus`,
+        method: 'post',
+        data
+    })
+}
+// 新增文章
+function addArticle(data) {
+    return request({
+        url: `/lejuAdmin/productArticle/addArticle`,
+        method: 'POST',
+        data
+    })
+}
+// 文章明细
+function productArticle(id) {
+    return request({
+        url: `/lejuAdmin/productArticle/productArticle/${id}`,
+        method: 'get'
+
+    })
+}
+//更新文章
+function updateArticle(data) {
+    return request({
+        url: `/lejuAdmin/productArticle/updateArticle`,
+        method: 'post',
+        data
+
+    })
+}
 
 export {
     getArticleList,
-    delArticle
+    delArticle,
+    changeShowStatus,
+    addArticle,
+    productArticle,
+    updateArticle
 }

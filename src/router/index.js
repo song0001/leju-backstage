@@ -56,22 +56,78 @@ export const constantRoutes = [{
             meta: { title: '主页', icon: 'dashboard' }
         }]
     },
+    {
+        path: '/market',
+        component: Layout,
+        redirect: '/market/activity',
+        name: 'Content',
+        alwaysShow: true, // 当子路由只有一个时候,也让他展开
+        meta: { title: '营销管理', icon: 'el-icon-goods' },
+        children: [{
+                path: 'activity',
+                name: 'Activity',
+                component: () =>
+                    import ('@/views/market/activity/index'),
+                meta: { title: '限时活动', icon: 'el-icon-files' }
+            },
+            {
+                path: 'adList',
+                name: 'AdList',
+                component: () =>
+                    import ('@/views/market/adList/index'),
+                meta: { title: '广告列表', icon: 'el-icon-document-copy' }
+            }
 
+        ]
+    },
     {
         path: '/content',
         component: Layout,
-        redirect: '/content/artitle',
+        redirect: '/content/article',
         name: 'Content',
         alwaysShow: true, // 当子路由只有一个时候,也让他展开
-        meta: { title: '内容管理', icon: 'el-icon-s-help' },
+        meta: { title: '内容管理', icon: 'el-icon-folder' },
         children: [{
-            path: 'article',
-            name: 'Article',
-            component: () =>
-                import ('@/views/content/article/index'),
-            meta: { title: '文章管理', icon: 'table' }
-        }]
+                path: 'article',
+                name: 'Article',
+                component: () =>
+                    import ('@/views/content/article/index'),
+                meta: { title: '文章管理', icon: 'el-icon-document' }
+            },
+            {
+                path: 'addArticle',
+                name: 'AddArticle',
+                hidden: true,
+                component: () =>
+                    import ('@/views/content/article/detail/index'),
+                meta: {
+                    title: '新增文章',
+                    icon: 'el-icon-document',
+                    activeMenu: '/content/article' // 触发左侧目录高亮路由
+                }
+            },
+            {
+                path: 'editArticle/:id',
+                name: 'EditArticle',
+                hidden: true,
+                component: () =>
+                    import ('@/views/content/article/detail/index'),
+                meta: {
+                    title: '新增文章',
+                    icon: 'el-icon-document',
+                    activeMenu: '/content/article' // 触发左侧目录高亮路由
+                }
+            },
+            {
+                path: ' materia',
+                name: ' Materia',
+                component: () =>
+                    import ('@/views/content/materia/index'),
+                meta: { title: '素材管理', icon: 'el-icon-picture-outline' }
+            },
+        ]
     },
+
 
 
 

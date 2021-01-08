@@ -33,6 +33,7 @@ export default {
       const first = matched[0]
 
       if (!this.isDashboard(first)) {
+        // console.log(matched)
         // matched = [{ path: '/dashboard', meta: { title: 'Dashboard' }}].concat(matched)
       }
 
