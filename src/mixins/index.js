@@ -9,7 +9,8 @@ export default {
                 pageSizes: [10, 20, 30, 40], // pageSizes得是 pageSize的整数倍
                 total: 0
             },
-            uploadUrl: '/lejuAdmin/material/uploadFileOss',
+            uploadUrl: '/lejuAdmin/material/uploadFileOss', //当前接口用于通用上传到oss,不保存至数据库
+            uploadUrl1: '/lejuAdmin/material/uploadFileOssSave', //素材被上传到oss,同时保存至数据库
             uploadHeaders: {
                 token: getToken()
             }

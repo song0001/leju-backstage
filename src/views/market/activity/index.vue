@@ -1,6 +1,8 @@
 <template >
   <div>
-限时活动
+  <el-card class="card" >
+
+  </el-card>
   </div>
 </template>
 <script>

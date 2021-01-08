@@ -57,6 +57,23 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/user',
+        component: Layout,
+        redirect: '/user/list',
+        name: 'user',
+        meta: { title: '注册用户管理', icon: 'el-icon-s-custom' },
+        alwaysShow: true,
+        children: [{
+                path: 'list',
+                name: 'userList',
+                component: () =>
+                    import ('@/views/user/index'),
+                meta: { title: '用户列表', icon: 'el-icon-user', componentUrl: '@/views/user/index' }
+            }
+
+        ]
+    },
+    {
         path: '/market',
         component: Layout,
         redirect: '/market/activity',
