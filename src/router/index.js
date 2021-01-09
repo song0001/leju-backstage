@@ -44,7 +44,7 @@ export const constantRoutes = [{
         hidden: true
     },
 
-    {
+    { //主页
         path: '/',
         component: Layout,
         redirect: '/dashboard',
@@ -56,7 +56,38 @@ export const constantRoutes = [{
             meta: { title: '主页', icon: 'dashboard' }
         }]
     },
-    {
+    { //商品管理
+        path: '/product',
+        component: Layout,
+        redirect: '/product/list',
+        name: 'Content',
+        alwaysShow: true, // 当子路由只有一个时候,也让他展开
+        meta: { title: '商品管理', icon: 'el-icon-s-shop' },
+        children: [{
+                path: 'list',
+                name: 'ProductList',
+                component: () =>
+                    import ('@/views/product/index'),
+                meta: { title: '商品列表', icon: 'el-icon-shopping-bag-2' }
+            },
+            {
+                path: 'category',
+                name: 'productCategory',
+                component: () =>
+                    import ('@/views/product/category/index'),
+                meta: { title: '商品分类', icon: 'el-icon-menu' }
+            },
+            {
+                path: 'brand',
+                name: 'productBrand',
+                component: () =>
+                    import ('@/views/product/brand/index'),
+                meta: { title: '品牌管理', icon: 'el-icon-present' }
+            }
+
+        ]
+    },
+    { //注册用户管理
         path: '/user',
         component: Layout,
         redirect: '/user/list',
@@ -73,7 +104,7 @@ export const constantRoutes = [{
 
         ]
     },
-    {
+    { //营销管理
         path: '/market',
         component: Layout,
         redirect: '/market/activity',
@@ -97,7 +128,7 @@ export const constantRoutes = [{
 
         ]
     },
-    {
+    { //内容管理
         path: '/content',
         component: Layout,
         redirect: '/content/article',

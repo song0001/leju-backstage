@@ -38,6 +38,11 @@
         </el-table-column>
         <el-table-column prop="birthday" label="生日" align="center">
         </el-table-column>
+           <el-table-column
+          align="center"
+          prop="createTime"
+          label="注册时间"
+        />
       </el-table>
       <el-pagination
         :current-page="page.currentPage"

@@ -2,7 +2,9 @@
   <div>
     <el-card class="card" shadow="never">
       <div slot="header">
-        <el-button type="primary" size="small" @click="add">新增</el-button>
+        <el-button type="primary" size="small" @click="dialogVisible = true"
+          >新增</el-button
+        >
       </div>
       <el-table border :data="list" style="width: 100%">
         <el-table-column
@@ -97,6 +99,74 @@
         </el-table-column>
       </el-table>
     </el-card>
+    <!-- dialog对话框 -->
+    <el-dialog title="热销详情" :visible.sync="dialogVisible" width="80%">
+      <div class="dialog-main">
+        <el-card class="main" shadow="never">
+          <div slot="header">
+            <span>条件查询</span>
+          </div>
+          <el-row :gutter="20">
+            <el-col :span="4">
+              <el-input
+                v-model="search.name"
+                size="mini"
+                placeholder="商品名称/模糊查询"
+              ></el-input>
+            </el-col>
+            <el-col :span="4">
+              <el-input
+                v-model="search.productSn"
+                size="mini"
+                placeholder="商品货号"
+              ></el-input>
+            </el-col>
+            <el-col :span="4">
+              <el-select
+                v-model="search.productId"
+                placeholder="品牌"
+                size="mini"
+              >
+                <el-option
+                  v-for="item in brandList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="4">
+              <el-select
+                v-model="search.publishStatus"
+                clearable
+                size="mini"
+                placeholder="上架状态"
+              >
+                <el-option label="上架" :value="1"> </el-option>
+                <el-option label="未上架" :value="0"> </el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="4" :offset="0">
+              <el-select
+                v-model="search.verifyStatus"
+                class="search-input"
+                size="mini"
+                clearable
+                placeholder="审核状态"
+              >
+                <el-option label="审核" value="1" />
+                <el-option label="未审核" value="0" />
+              </el-select>
+            </el-col>
+          </el-row>
+        </el-card>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false" size="mini">取 消</el-button>
+        <!-- <el-button type="primary" @click="dialogVisible = false">确 定</el-button> -->
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -111,6 +181,15 @@ export default {
     return {
       loading: false,
       list: [],
+      dialogVisible: false, //对话框
+      search: {
+        //条件查询
+        name: "",
+        productSn: "",
+        publishStatus: "",
+        verifyStatus: "",
+      },
+      brandList:[]
     };
   },
   created() {
@@ -127,8 +206,7 @@ export default {
         this.loading = false;
       });
     },
-    // 新增活动
-    add() {},
+
     del(row) {
       console.log(row);
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
@@ -139,13 +217,13 @@ export default {
         .then(() => {
           delRecommend(row.recommendId).then((res) => {
             if (res.success) {
-              this.init()
+              this.init();
               this.$message({
                 type: "success",
                 message: "删除成功!",
               });
-            }else{
-                 this.$message.error(res.message)
+            } else {
+              this.$message.error(res.message);
             }
           });
         })
@@ -166,5 +244,8 @@ export default {
 .table_img {
   width: 100px;
   height: 100px;
+}
+.dialog-footer {
+  display: flex;
 }
 </style>
