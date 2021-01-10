@@ -100,7 +100,7 @@
       </el-table>
     </el-card>
     <!-- dialog对话框 -->
-    <el-dialog title="热销详情" :visible.sync="dialogVisible" width="80%">
+    <el-dialog title="热销详情" :visible.sync="dialogVisible" width="80%"   style="margin-top: -100px">
       <div class="dialog-main">
         <el-card class="main" shadow="never">
           <div slot="header">
@@ -122,16 +122,17 @@
               ></el-input>
             </el-col>
             <el-col :span="4">
+              <!-- 通过品牌id可以查询商品 -->
               <el-select
-                v-model="search.productId"
+                v-model="search.brandId"
                 placeholder="品牌"
                 size="mini"
               >
                 <el-option
                   v-for="item in brandList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
                 >
                 </el-option>
               </el-select>
@@ -159,7 +160,81 @@
                 <el-option label="未审核" value="0" />
               </el-select>
             </el-col>
+            <el-col :span="4">
+              <el-button type="default" @click="doReset" size="mini"
+                >重置</el-button
+              >
+              <el-button type="primary" size="mini" @click="doSearch"
+                >搜索</el-button
+              >
+            </el-col>
           </el-row>
+        </el-card>
+        <!-- 商品列表 -->
+        <el-card class=" table_main" shadow="never">
+          <div slot="header">
+            <span>商品列表</span>
+          </div>
+          <el-radio-group
+            v-model="productId"
+            style="width: 100%"
+            @change="radioChange"
+          >
+            <el-table border :data="productList" style="width: 100%">
+              <el-table-column
+                v-loading="loading"
+                fixed="left"
+                type="index"
+                prop="date"
+                label="序号"
+                align="center"
+              >
+              </el-table-column>
+              <el-table-column label="选择" align="center">
+                <template slot-scope="scope">
+                  <el-radio :label="scope.row.id"></el-radio>
+                </template>
+              </el-table-column>
+              <el-table-column label="商品图片" align="center">
+                <template slot-scope="scope">
+                  <img :src="scope.row.pic" class="table_img img" />
+                </template>
+              </el-table-column>
+
+              <el-table-column prop="productSn" label="商品名称" align="center">
+                <template slot-scope="scope">
+                  <p>{{ scope.row.name }}</p>
+                  <p>品牌: {{ scope.row.brandName }}</p>
+                  <p>{{ scope.row.description }}</p>
+                </template>
+              </el-table-column>
+
+              <el-table-column prop="name" label="商品价格" align="center">
+                <template slot-scope="scope">
+                  <p>原价: {{ scope.row.originalPrice }}</p>
+                  <p>现价: {{ scope.row.price }}</p>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="productCategoryName"
+                label="商品类别"
+                align="center"
+              >
+              </el-table-column>
+                <el-table-column prop="weight" label="重量" align="center" >
+        </el-table-column>
+            </el-table>
+          </el-radio-group>
+          <el-pagination
+            :current-page="page.currentPage"
+            :page-sizes="page.pageSizes"
+            :page-size="page.size"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="page.total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+          >
+          </el-pagination>
         </el-card>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -176,7 +251,11 @@ import {
   findAllRecommends,
   updateRecommend,
 } from "@/api/market/index";
+import { brandList } from "@/api/product/brand/index";
+import { productList } from "@/api/product/index";
+import mixin from "@/mixins/index";
 export default {
+  mixins: [mixin],
   data() {
     return {
       loading: false,
@@ -186,14 +265,21 @@ export default {
         //条件查询
         name: "",
         productSn: "",
+        brandId:'',
         publishStatus: "",
         verifyStatus: "",
       },
-      brandList:[]
+      // 品牌列表
+      brandList: [],
+      // 商品列表
+      productList: [],
+      productId: "", // radio选中 商品id
     };
   },
   created() {
     this.init();
+    this.getBrandList();
+    this.getProductList();
   },
   methods: {
     init() {
@@ -206,7 +292,34 @@ export default {
         this.loading = false;
       });
     },
-
+    //   获取商品列表
+    getProductList() {
+      this.loading = true;
+      productList(this.page.currentPage, this.page.size, this.search).then(
+        (res) => {
+          console.log('商品列表',res);
+          this.productList = res.data.rows;
+          this.page.total = res.data.total;
+          this.loading = false;
+        }
+      );
+    },
+    // 获取品牌列表
+    getBrandList() {
+      brandList().then((res) => {
+        console.log('品牌列表',res);
+        this.brandList = res.data.items;
+      });
+    },
+    // 重置
+    doReset() {
+      this.search = this.$options.data().search;
+    },
+    // 搜索
+    doSearch() {
+       this.page.currentPage = 1
+        this.getProductList()
+    },
     del(row) {
       console.log(row);
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
@@ -231,16 +344,40 @@ export default {
           console.log(rej);
         });
     },
+    radioChange(val) {
+      console.log(val); //当前美商品的id
+    },
     // 是否过期
     isJudgeTime(startTime, endTime) {
       var num = new Date().getTime() - new Date(endTime).getTime();
       return num > 0 ? "过期" : "否";
+    },
+    // 改变每页显示数量
+    handleSizeChange(val) {
+      this.page.size = val;
+      this.page.currentPage = 1;
+      this.getProductList();
+    },
+    // 切换当前页码
+    handleCurrentChange(val) {
+      this.page.currentPage = val;
+      this.getProductList();
     },
   },
 };
 </script>
 <style lang="scss" scoped>
 @import "@/styles/myScss.scss";
+.dialog-main{
+  position: relative;
+  height: 700px;
+  overflow: auto;
+}
+ .table_main {
+   margin-top: 20px;
+    height: 500px;
+    overflow: auto;
+  }
 .table_img {
   width: 100px;
   height: 100px;

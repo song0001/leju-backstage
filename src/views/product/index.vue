@@ -44,7 +44,7 @@
                 >
                   <el-option
                     v-for="item in brandList"
-                    :key="item.value"
+                    :key="item.id"
                     :label="item.name"
                     :value="item.id"
                   >
@@ -263,6 +263,7 @@ export default {
   created() {
     this.getProductList();
     this.getBrandList()
+ 
   },
   methods: {
     //   获取商品列表
