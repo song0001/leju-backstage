@@ -71,6 +71,18 @@ export const constantRoutes = [{
                 meta: { title: '商品列表', icon: 'el-icon-shopping-bag-2' }
             },
             {
+                path: 'addDetail',
+                name: 'addDetail',
+                hidden: true,
+                component: () =>
+                    import ('@/views/product/addDetail/index'),
+                meta: {
+                    title: '新增商品',
+                    icon: 'el-icon-shopping-bag-2',
+                    activeMenu: '/product/list' // 触发左侧目录高亮路由
+                }
+            },
+            {
                 path: 'category',
                 name: 'productCategory',
                 component: () =>

@@ -98,7 +98,7 @@
     <!-- 商品列表 -->
     <el-card class="card">
         <div slot="header">
-            <el-button  type="primary"
+            <el-button  type="primary" @click="addProduct"
           size="mini">新增</el-button>
         </div>
       <el-table border :data="productList" style="width: 100%">
@@ -309,7 +309,12 @@ brandList().then(res=>{
     edit(row) {},
     // 删除
     del(row) {},
+    // 新增商品
+  addProduct(){
+    this.$router.push('addDetail')
+  }
   },
+  
 };
 </script>
 <style lang="scss" scoped>
