@@ -218,7 +218,7 @@
         <el-table-column fixed="right" align="center" label="操作" width="100">
           <template slot-scope="scope">
             <el-button type="text" @click="edit(scope.row)">
-              <span>删除</span>
+              <span>编辑</span>
             </el-button>
             <el-button type="text" @click="del(scope.row)">
               <span style="color: red">删除</span>
@@ -241,7 +241,7 @@
 </template>
 <script> 
 import {brandList} from '@/api/product/brand/index'
-import { productList } from "@/api/product/index";
+import { productList,productDelete } from "@/api/product/index";
 import mixin from "@/mixins/index";
 export default {
   mixins: [mixin],
@@ -304,11 +304,38 @@ brandList().then(res=>{
       this.getProductList();
     },
     // 编辑sku
-    skuDetail(row) {},
+    skuDetail(row) {
+      console.log(row);
+    },
     // 编辑
-    edit(row) {},
+    edit(row) {
+       this.$router.push({path:'addDetail',query:{id:row.id}})
+    },
     // 删除
-    del(row) {},
+    del(row) {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+           // 请求api
+          //  console.log(row.id);
+                 productDelete(row.id).then((res) => {
+            if (res.success) {
+              this.$message({
+                type: "success",
+                message: "删除成功!",
+              });
+              this.getProductList()
+            }else{
+                 this.$message.error(res.message)
+            }
+          }
+          );
+            }).catch(rej => {
+                console.log(rej)
+            })
+    },
     // 新增商品
   addProduct(){
     this.$router.push('addDetail')
