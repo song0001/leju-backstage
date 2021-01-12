@@ -693,6 +693,7 @@ export default {
     // 画册上传成功
     imgUploadSuccess(res, file) {
       if (res.success) {
+        console.log(res);
         this.fileList.push({ url: res.data.material.ossUrl })
         this.$message.success('上传成功')
       } else {
@@ -850,8 +851,8 @@ export default {
         if (valid) {
           const albumPicsArr = this.fileList.map((item) => item.url)
              const content = this.getTi()
-          console.log(this.fileList)
-          console.log(albumPicsArr)
+          // console.log(this.fileList)
+          // console.log(albumPicsArr)
           if (!this.id) {
             //新增
             addProductAndSkus({
