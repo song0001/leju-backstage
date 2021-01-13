@@ -6,7 +6,7 @@ function getCategory() {
         method: 'get'
     })
 }
-// 修改分类
+// 更新分类
 function updateCategory(data) {
     return request({
         url: ` /lejuAdmin/category/updateCategory`,
