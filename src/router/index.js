@@ -56,6 +56,37 @@ export const constantRoutes = [{
             meta: { title: '主页', icon: 'dashboard' }
         }]
     },
+    { //权限管理
+        path: '/auth',
+        component: Layout,
+        redirect: '/auth/user',
+        name: 'auth',
+        meta: { title: '权限管理', icon: 'auth' },
+        alwaysShow: true,
+        children: [{
+                path: 'user',
+                name: 'authUser',
+                component: () =>
+                    import ('@/views/auth/user/index'),
+                meta: { title: '账号管理', icon: 'account' }
+            },
+            {
+                path: 'role',
+                name: 'authRole',
+                component: () =>
+                    import ('@/views/auth/role/index'),
+                meta: { title: '角色管理', icon: 'role' }
+            },
+            {
+                path: 'permission',
+                name: 'authPermission',
+                component: () =>
+                    import ('@/views/auth/permission/index'),
+                meta: { title: '资源管理', icon: 'menu' }
+            }
+
+        ]
+    },
     { //商品管理
         path: '/product',
         component: Layout,
@@ -99,6 +130,37 @@ export const constantRoutes = [{
 
         ]
     },
+    { //订单管理
+        path: '/order',
+        component: Layout,
+        redirect: '/order/list',
+        name: 'order',
+        meta: { title: '订单管理', icon: 'el-icon-tickets' },
+        alwaysShow: true,
+        children: [{
+                path: 'list',
+                name: 'orderList',
+                component: () =>
+                    import ('@/views/order/list/index'),
+                meta: { title: '订单列表', icon: 'el-icon-document-checked' }
+            },
+            {
+                path: 'back',
+                name: 'backList',
+                component: () =>
+                    import ('@/views/order/back/index'),
+                meta: { title: '退单列表', icon: 'el-icon-document-delete' }
+            },
+            {
+                path: 'address',
+                name: 'addressList',
+                component: () =>
+                    import ('@/views/order/address/index'),
+                meta: { title: '地址管理', icon: 'el-icon-school' }
+            }
+
+        ]
+    },
     { //注册用户管理
         path: '/user',
         component: Layout,
@@ -111,7 +173,7 @@ export const constantRoutes = [{
                 name: 'userList',
                 component: () =>
                     import ('@/views/user/index'),
-                meta: { title: '用户列表', icon: 'el-icon-user', componentUrl: '@/views/user/index' }
+                meta: { title: '用户列表', icon: 'el-icon-user' }
             }
 
         ]

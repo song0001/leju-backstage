@@ -2,9 +2,7 @@
   <div>
     <el-card class="card" shadow="never">
       <div slot="header">
-        <el-button type="primary" size="small" @click="add"
-          >新增</el-button
-        >
+        <el-button type="primary" size="small" @click="add">新增</el-button>
       </div>
       <el-table border :data="adsList" style="width: 100%">
         <el-table-column
@@ -182,13 +180,19 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="6" class="footer">
+            <el-form-item>
+              <span class="dialog-footer">
+                <el-button @click="resetForm('addFormRef')">取 消</el-button>
+                <el-button type="primary" @click="submitForm('addFormRef')"
+                  >确 定</el-button
+                >
+              </span>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="resetForm('addFormRef')">取 消</el-button>
-        <el-button type="primary" @click="submitForm('addFormRef')"
-          >确 定</el-button
-        >
-      </span>
     </el-dialog>
   </div>
 </template>
@@ -203,7 +207,7 @@ export default {
       adsList: [], //广告列表
       dialogVisible: false, //对话框
       // 判断是否编辑
-      isEdit:false,
+      isEdit: false,
       addForm: {
         //提交表单value
         name: '',
@@ -237,16 +241,18 @@ export default {
     },
     // 打开弹窗
     add() {
+      this.isEdit=false
       this.dialogVisible = true
-     
+      // 重置表单
+  this.addForm=this.$options.data().addForm
     },
     // 编辑
     edit(row) {
       this.dialogVisible = true
       console.log(row)
-      this.isEdit=true
+      this.isEdit = true
       this.addForm = row
-      console.log(this.isEdit);
+      console.log(this.isEdit)
     },
     // 删除
     del(row) {
@@ -275,18 +281,22 @@ export default {
         })
     },
     handleBigPicSuccess(val) {
-      console.log(val)
-      this.addForm.pic = val.data.material.ossUrl
+      console.log(val) 
+      this.addForm.pic = val.data.fileUrl
     },
     // 提交
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$confirm(`是否确认${this.isEdit?'修改':'新增'}广告`, '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          })
+          this.$confirm(
+            `是否确认${this.isEdit ? '修改' : '新增'}广告`,
+            '提示',
+            {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }
+          )
             .then(() => {
               // 请求api
               if (!this.isEdit) {
@@ -312,7 +322,7 @@ export default {
                   if (res.success) {
                     this.getAdsList()
                     this.dialogVisible = false
-                    this.isEdit=false
+                    this.isEdit = false
                     this.$refs[formName].resetFields()
                     this.$message({
                       type: 'success',
@@ -337,6 +347,7 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields()
       this.dialogVisible = false
+      this.isEdit = false
     }
   }
 }
@@ -372,5 +383,8 @@ export default {
   width: 178px;
   height: 178px;
   display: block;
+}
+.footer {
+  float: right;
 }
 </style>

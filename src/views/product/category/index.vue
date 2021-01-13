@@ -18,8 +18,9 @@
               :body-style="{ padding: '0px' }"
               class="cageCard"
               align="center"
+              shadow="hover"
             >
-              <div style="bottom: 14px" class="title">
+              <div style="bottom: 14px" class="title" >
                 <span>{{ item.name }}</span>
               </div>
               <div class="img_card">
@@ -43,6 +44,59 @@
           </el-col>
         </el-row>
       </div>
+      <!-- 全部分类 -->
+      <div class="sort">
+        <span class="leju">全部分类:</span>
+        <el-table
+          :data="tableList"
+          style="width: 100%; margin-bottom: 20px"
+          row-key="id"
+          border
+          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+        >
+          <el-table-column
+            prop="name"
+            label="菜单名称"
+            align="center"
+            width="150"
+            fixed
+          >
+          </el-table-column>
+          <el-table-column align="center" label="icon" width="200 ">
+            <template slot-scope="scope">
+              <img :src="scope.row.icon" alt="" />
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="name"
+            label="分类名称"
+            align="center"
+            width="200"
+          >
+          </el-table-column>
+          <el-table-column prop="sort" label="排序" align="center" width="200">
+          </el-table-column>
+          <el-table-column label="显示状态" align="center" width="200">
+            <template slot-scope="scope">
+              {{ scope.row.showStatus === 1 ? '显示' : '不显示' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="导航栏状态" align="center" width="200">
+            <template slot-scope="scope">
+              {{ scope.row.navStatus === 1 ? '展示' : '不展示' }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="description" label="描述" align="center">
+          </el-table-column>
+          <el-table-column
+            prop="createTime"
+            label="创建时间"
+            align="center"
+            width="200"
+          >
+          </el-table-column>
+        </el-table>
+      </div>
     </el-card>
   </div>
 </template>
@@ -54,8 +108,8 @@ export default {
   data() {
     return {
       categoryList: [],
-      imageUrl: '',
-      SeleList: []
+      SeleList: [],
+      tableList: []
     }
   },
   created() {
@@ -67,11 +121,17 @@ export default {
       getCategory().then((res) => {
         console.log('分类列表', res)
         this.categoryList = res.data.items[1].children
+        this.tableList = res.data.items.map((item) => {
+          var obj = item.category
+          obj.children = item.children
+          return obj
+        })
+        console.log(this.tableList)
       })
     },
     handleSuccess(res) {
       console.log(res)
-  
+
       console.log('1111', this.SeleList)
       this.$confirm('确定修改图片?', {
         confirmButtonText: '确定',
@@ -82,10 +142,10 @@ export default {
           // 请求api
 
           updateCategory({
-            icon: res.data.material.ossUrl,
+            icon: res.data.fileUrl,
             id: this.SeleList.id,
             level: this.SeleList.level,
-            parentId:this.SeleList.parentId
+            parentId: this.SeleList.parentId
           }).then((res) => {
             if (res.success) {
               this.$message({
@@ -103,9 +163,9 @@ export default {
         })
     },
     selectImg(row) {
-          this.SeleList = Object.assign({}, row)
+      this.SeleList = Object.assign({}, row)
       console.log(row)
-      this.SeleList=row
+      this.SeleList = row
     }
   }
 }
@@ -137,6 +197,13 @@ export default {
     text-align: left;
     padding: 18px 20px;
     border-bottom: 1px solid #ebeef5;
+  }
+}
+.sort {
+  margin-top: 20px;
+  img {
+    width: 60px;
+    height: 60px;
   }
 }
 </style>

@@ -55,7 +55,7 @@
               <el-upload
                 ref="uploadAtricle"
                 class="upload-demo"
-                :action="uploadUrl"
+                :action="uploadUrl1"
                 :headers="uploadHeaders"
                 multiple
                 :on-success="handleAvatarSuccess"
@@ -87,7 +87,7 @@
               <el-upload
                 ref="innerUpload"
                 class="upload-demo"
-                :action="uploadUrl"
+                :action="uploadUrl1"
                 :headers="uploadHeaders"
                 multiple
                 :on-success="handleInnerImg"

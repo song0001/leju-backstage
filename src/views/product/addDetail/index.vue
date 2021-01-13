@@ -598,7 +598,7 @@ export default {
       skuColorObj: {
         text: ''
       }, //颜色暂存
-      skuColorList: [], // 颜色列表
+      skuColorList: [], // 颜色列表 
       skuColorSel: [], //选中颜色列表
 
       skuSizeObj: {
@@ -675,7 +675,7 @@ export default {
     // 缩略图提交成功回调
     handleAvatarSuccess(res) {
       console.log(res)
-      this.ruleForm.pic = res.data.material.ossUrl
+      this.ruleForm.pic = res.data.fileUrl
     },
 
     // 移除图片
@@ -694,7 +694,7 @@ export default {
     imgUploadSuccess(res, file) {
       if (res.success) {
         console.log(res);
-        this.fileList.push({ url: res.data.material.ossUrl })
+        this.fileList.push({ url: res.data.fileUrl })
         this.$message.success('上传成功')
       } else {
         this.$message.error('上传失败')
@@ -712,7 +712,7 @@ export default {
       // console.log(res);
       this.skuList.forEach((item) => {
         if (item === this.tempTableObj) {
-          item.pic = res.data.material.ossUrl
+          item.pic = res.data.fileUrl
         }
       })
     },

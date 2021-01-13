@@ -144,8 +144,8 @@
                 size="mini"
                 placeholder="上架状态"
               >
-                <el-option label="上架" :value="1"> </el-option>
-                <el-option label="未上架" :value="0"> </el-option>
+                <el-option label="上架" value="1"> </el-option>
+                <el-option label="未上架" value="0"> </el-option>
               </el-select>
             </el-col>
             <el-col :span="4" :offset="0">
@@ -190,9 +190,9 @@
                 align="center"
               >
               </el-table-column>
-              <el-table-column label="选择" align="center">
+              <el-table-column label="选择" align="center" width="100">
                 <template slot-scope="scope">
-                  <el-radio :label="scope.row.id"></el-radio>
+                  <el-radio :label="scope.row.id"><span /></el-radio>
                 </template>
               </el-table-column>
               <el-table-column label="商品图片" align="center">
@@ -242,6 +242,85 @@
         <!-- <el-button type="primary" @click="dialogVisible = false">确 定</el-button> -->
       </span>
     </el-dialog>
+    <el-dialog title="编辑限时活动" :visible.sync="isEditOpen" width="50%">
+      <el-row :gutter="10">
+        <el-form
+          ref="form"
+          :model="form"
+          :inline="true"
+          label-width="100px"
+          size="mini"
+        >
+          <el-col :span="12" :offset="0">
+            <el-form-item label="商品原价">
+            
+              <span>{{ productDetail.price }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="商品名称">
+              <span>{{ productDetail.name }}</span>
+            </el-form-item>
+          </el-col>
+          <!-- 需要编辑的内容 -->
+          <el-col :span="12" :offset="0">
+            <el-form-item label="促销价格">
+              <el-input-number v-model="form.promotionPrice" class="myInput" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12" :offset="0">
+            <el-form-item label="排序">
+              <el-input-number v-model="form.sort" class="myInput" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="开始时间">
+              <el-date-picker
+                v-model="form.promotionStartTime"
+                class="myInput"
+                type="datetime"
+                placeholder="开始时间"
+                value-format="yyyy-MM-dd HH:mm:ss"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="结束时间">
+              <el-date-picker
+                v-model="form.promotionEndTime"
+                class="myInput"
+                type="datetime"
+                placeholder="开始时间"
+                value-format="yyyy-MM-dd HH:mm:ss"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="活动限购数量">
+              <el-input v-model="form.promotionPerLimit" class="myInput" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="商品图片">
+              <img
+                style="width: 150px; height: 150px"
+                :src="productDetail.pic"
+                alt=""
+              >
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-row>
+      <span slot="footer">
+        <el-button @click="isEditOpen = false">取消</el-button>
+        <el-button
+          type="primary"
+          :loading="couldNext"
+          @click="onSubmit"
+        >确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -258,6 +337,8 @@ export default {
   mixins: [mixin],
   data() {
     return {
+       // 是否显示
+            isEditOpen: false,
       loading: false,
       list: [],
       dialogVisible: false, //对话框
@@ -273,7 +354,18 @@ export default {
       brandList: [],
       // 商品列表
       productList: [],
+       couldNext: false, // 是否可以下一步
       productId: "", // radio选中 商品id
+       form: {
+                productId: '', // 商品ID
+                promotionPrice: '',
+                promotionPerLimit: '',
+                sort: '',
+                promotionStartTime: '',
+                promotionEndTime: ''
+            },
+        productDetail: {} // 编辑商品的详情
+
     };
   },
   created() {
@@ -345,7 +437,16 @@ export default {
         });
     },
     radioChange(val) {
-      console.log(val); //当前美商品的id
+      // console.log(val); //当前商品的id
+       this.isEditOpen = true
+            this.productList.forEach((item) => {
+                if (item.id === val) {
+                    this.productDetail = Object.assign({}, item)
+                }
+            })
+            this.form = {}
+
+            this.productId = val
     },
     // 是否过期
     isJudgeTime(startTime, endTime) {
@@ -363,6 +464,40 @@ export default {
       this.page.currentPage = val;
       this.getProductList();
     },
+  // 提交
+        onSubmit() {
+            this.$confirm(`是否确认新增最热推荐商品?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            })
+                .then(() => {
+                    console.log('ss')
+                    this.couldNext = true // 打开btn  loding
+                   addRecommend({
+                            ...this.form,
+                            productId: this.productId
+
+                        })
+                        .then((res) => {
+                            console.log('res', res)
+                            if (res.success) {
+                                this.isEditOpen = false // 关闭编辑弹窗
+                                this.dialogVisible = false // 关闭新增弹窗
+                                this.productId = ''
+                                this.$emit('success')
+                                this.$message.success('添加成功')
+                            } else {
+                                this.$message.error('添加失败')
+                            }
+                            this.couldNext = false
+                        })
+           
+                })
+                .catch((rej) => {
+                    console.log('quxiao')
+                })
+        }
   },
 };
 </script>

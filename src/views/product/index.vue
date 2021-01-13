@@ -577,7 +577,7 @@ export default {
       // console.log(res.data.material.ossUrl);
       this.skuList.forEach((item) => {
         if (item === this.tempTableObj) {
-          item.pic = res.data.material.ossUrl
+          item.pic = res.data.fileUrl
         }
       })
     },
