@@ -16,7 +16,7 @@
         </el-table-column>
         <el-table-column label="品牌名称"   prop="name" align="center" width="200">
         </el-table-column>
-         <el-table-column label="战时状态"   align="center" width="200">
+         <el-table-column label="展示状态"   align="center" width="200">
         
         <template slot-scope="scope">
             <p>

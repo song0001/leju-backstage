@@ -91,7 +91,7 @@
           prop="createTime"
           label="添加时间"
           align="center"
-          width="200"
+       
         >
         </el-table-column>
         <el-table-column
