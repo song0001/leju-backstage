@@ -237,8 +237,9 @@ export default {
     addChange(val) {
       //选择地址
       console.log(val)
-      this.addForm.cityCode = val.join(',')
+
       console.log(this.addForm.cityCode)
+      console.log(this.addForm)
     },
     // 打开弹窗
     add() {
@@ -250,10 +251,34 @@ export default {
     // 编辑
     edit(row) {
       this.dialogVisible = true
-      console.log(row)
+      console.log('当前行', row)
       this.isEdit = true
+      //  row.cityCode=row.cityCode.split(',')
+      if (row.cityCode.constructor === Array) {
+        //  console.log('数组');
+        //  console.log('1111111111',row.cityCode);
+      } else {
+        row.cityCode = row.cityCode.split(',')
+        console.log('字符串')
+        console.log('2222222222', row.cityCode)
+      }
       this.addForm = row
-      console.log(this.isEdit)
+      console.log(this.addForm)
+      // console.log(row.cityCode.constructor==Array);
+      // if(val.cityCode.constructor)
+      // this.addForm.cityCode=res.data.cityCode.split(',')
+      this.getAddressDetail(row.id)
+    },
+    getAddressDetail(id) {
+      addressDetail(id).then((res) => {
+        //  console.log('地址详情',res);
+        //  this.addForm=res.data.address
+        //  this.addForm={
+        //    ...res.data.address,
+        //    cityCode:res.data.address.cityCode.split(',')
+        //  }
+        // this.addForm.cityCode=res.data.cityCode.split(',')
+      })
     },
     // 删除地址
     del(row) {
@@ -283,10 +308,11 @@ export default {
     },
     // 提交
     submitForm(formName) {
+      console.log(this.addForm)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$confirm(
-            `是否确认${this.isEdit ? '修改' : '新增'}广告`,
+            `是否确认${this.isEdit ? '修改' : '新增'}地址信息`,
             '提示',
             {
               confirmButtonText: '确定',
@@ -295,10 +321,21 @@ export default {
             }
           )
             .then(() => {
-              // 请求api
+              var obj = {
+                ...this.addForm,
+                province: CodeToText[this.addForm.cityCode[0]],
+                city: CodeToText[this.addForm.cityCode[1]],
+                region: CodeToText[this.addForm.cityCode[2]]
+              }
+              var obj2 = {
+                ...obj,
+                cityCode: this.addForm.cityCode.join(',')
+              }
+              console.log(obj2)
               if (!this.isEdit) {
                 //新增
-                addressDetail(this.addForm).then((res) => {
+
+                saveAddress(obj2).then((res) => {
                   console.log(res)
                   if (res.success) {
                     this.getAddressList()
@@ -314,7 +351,7 @@ export default {
                 })
               } else {
                 //修改
-                updateBrand(this.addForm).then((res) => {
+                updateAddress(obj2).then((res) => {
                   console.log(res)
                   if (res.success) {
                     this.getAddressList()

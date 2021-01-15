@@ -280,6 +280,7 @@ export default {
     // 查看订单
     goOrderDetail(row){
     console.log('查看订单',row);
+    this.$router.push({path:'orderDetail',query:{id:row.id}})
     }
   }
 }

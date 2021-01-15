@@ -112,7 +112,10 @@
           prop="productAttr"
         >
           <template slot-scope="scope">
-            <p>{{ scope.row.productAttr | initAttrArr }}</p>
+            <div v-for="item in JSON.parse(scope.row.productAttr)" :key="item.id">
+                 <span>{{item.key}}:{{item.value}}</span>
+              </div>
+            <!-- <p>{{ scope.row.productAttr | initAttrArr }}</p> -->
           </template>
         </el-table-column>
         <el-table-column
@@ -223,6 +226,7 @@ export default {
     // 查看订单
     goBackDetail(row) {
       console.log('查看订单', row)
+        this.$router.push({path:'backDetail',query:{id:row.id}})
     }
   }
 }
