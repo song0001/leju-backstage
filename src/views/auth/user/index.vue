@@ -1,9 +1,9 @@
 <template >
   <div>
     <el-card class="card" shadow="never">
-      <div slot="header">
+      <!-- <div slot="header">
         <span> 条件查询</span>
-      </div>
+      </div> -->
       <el-form
         :model="searchForm"
         ref="ruleForm"
@@ -45,7 +45,7 @@
     <!-- 用户列表 -->
     <el-card class="card">
       <div slot="header">
-        <el-button type="parimy">新增</el-button>
+        <el-button type="primary" size="mini">新增</el-button>
       </div>
       <el-table border :data="userInfoList" style="width: 100%">
         <el-table-column
