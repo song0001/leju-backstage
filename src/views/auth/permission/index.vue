@@ -16,11 +16,17 @@
           width="200"
             fixed
         >
+         <template slot-scope="scope">
+           <!-- 添加隐藏不可见图标 -->
+              <span>{{ scope.row.title }}</span><svg-icon v-if="scope.row.hidden" title="隐藏,不可见" icon-class="hidden" class-name="custom-class" />
+            </template>
         </el-table-column>
         <el-table-column label="图标" prop="" width="100" align="center">
           <template slot-scope="scope">
-            <div>    
-              <i :class="scope.row.icon"></i>
+            <div>   
+              <!-- 判断是否有图标   -->
+              <i v-if="!scope.row.hidden" :class="scope.row.icon"></i>
+               <svg-icon v-else :icon-class="scope.row.icon" class-name="icon" />
             </div>
           </template>
         </el-table-column>

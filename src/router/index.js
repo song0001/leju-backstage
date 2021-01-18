@@ -266,7 +266,30 @@ export const constantRoutes = [{
         ]
     },
 
+    {
+        path: '/person',
+        component: Layout,
+        redirect: '/person/index',
+        name: 'person',
+        meta: { title: '个人中心', icon: 'el-icon-user-solid' },
+        alwaysShow: true,
+        children: [{
+                path: 'index',
+                name: 'personIndex',
+                component: () =>
+                    import ('@/views/person/index'),
+                meta: { title: '个人主页', icon: 'el-icon-user' }
+            },
+            {
+                path: 'setting',
+                name: 'personSetting',
+                component: () =>
+                    import ('@/views/person/setting/index'),
+                meta: { title: '个人设置', icon: 'el-icon-setting' }
+            }
 
+        ]
+    },
 
 
 
