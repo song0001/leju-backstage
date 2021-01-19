@@ -101,6 +101,9 @@
         <el-button type="primary" @click="addProduct" size="mini"
           >新增</el-button
         >
+        <el-button type="primary" @click="exportExcel" size="mini"
+          >导出商品列表excle文件</el-button
+        >
       </div>
       <el-table border :data="productList" style="width: 100%">
         <el-table-column
@@ -415,6 +418,36 @@ export default {
     this.getBrandList()
   },
   methods: {
+// 导出商品excel文件
+exportExcel(){
+   import('@/vendor/Export2Excel').then((excel) => {
+        // console.log(excel)
+        // excel第一行
+        const tHeader = ['商品名称', '商品重量(kg)', '商品类别']
+        const keys = ['name', 'weight', 'productCategoryName']
+        // excel数据
+        const data = this.getJson(keys)
+
+        excel.export_json_to_excel({
+          header: tHeader, // 表头 必填
+          data, // 具体数据 必填
+          filename: '商品信息列表', // 导出的excel名称
+          autoWidth: true, // 自适应宽度
+          bookType: 'xlsx' // 非必填
+        })
+      })
+},
+    // 处理要导出的数据
+    getJson(keys) {
+      // 先循环文章列表
+      return this.productList.map(out => {
+        // 再循环需要筛选出来keys数组
+        return keys.map(inner => {
+          return out[inner]
+        })
+      })
+    },
+
     //   获取商品列表
     getProductList() {
       this.loading = true
