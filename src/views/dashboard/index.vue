@@ -6,7 +6,7 @@
           ><svg-icon icon-class="full" @click="fullScreen"
         /></span>
         <div class="title">
-          <span>不凡数据大屏</span>
+          <span>乐居数据大屏</span>
         </div>
         <!-- <div class="time">2021-01-19 14:35:15</div> -->
         <div class="time">{{ timeText }}</div>

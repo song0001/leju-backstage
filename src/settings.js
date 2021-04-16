@@ -14,7 +14,7 @@ module.exports = {
      */
     sidebarLogo: false,
     // 定义一个host
-    host: 'http://localhost'
+    // host: 'http://localhost'
         // host: 'http://192.160.0.100'
-        // host: 'http://leju.bufan.cloud',
+        host: 'http://leju.bufan.cloud'
 }

@@ -1,7 +1,7 @@
 // 引入封装好的axios
 import request from '@/api/request'
 
-// 查询所有菜单
+// 获取用户列表
 function findAllPermissions(data) {
     return request({
         url: '/admin/sysAuth/permission/findAllPermissions',
@@ -9,22 +9,19 @@ function findAllPermissions(data) {
         data
     })
 }
-// 删除菜单权限
-function remove(id) {
+function removePermission(id) {
     return request({
         url: `/admin/sysAuth/permission/remove/${id}`,
         method: 'DELETE'
     })
 }
-// 新增菜单权限
-function save(data) {
+function savePermission(data) {
     return request({
         url: `/admin/sysAuth/permission/save`,
         method: 'POST',
         data
     })
 }
-// 初始化菜单权限
 function saveInitMenus(data) {
     return request({
         url: `/admin/sysAuth/permission/saveInitMenus`,
@@ -32,16 +29,17 @@ function saveInitMenus(data) {
         data
     })
 }
-// 修改菜单权限
-function update(data) {
+function updatePermission(data) {
     return request({
         url: `/admin/sysAuth/permission/update`,
         method: 'PUT',
         data
     })
 }
-
-//   给角色分配权限
+/**
+ * 给角色分配权限
+ * @param {*} data
+ */
 function saveRolePermission(data) {
     return request({
         url: `/admin/sysAuth/permission/saveRolePermission`,
@@ -49,19 +47,21 @@ function saveRolePermission(data) {
         data
     })
 }
-
-//  根据角色获取菜单
+/**
+ * 根据角色获取菜单
+ * @param {*} roleId
+ */
 function selectAllMenu(roleId) {
     return request({
         url: `/admin/sysAuth/permission/selectAllMenu/${roleId}`,
         method: 'GET'
     })
 }
-export {
+export default {
     findAllPermissions,
-    remove,
-    save,
-    update,
+    removePermission,
+    savePermission,
+    updatePermission,
     saveRolePermission,
     selectAllMenu,
     saveInitMenus

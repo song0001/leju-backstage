@@ -3,12 +3,12 @@ export default {
         return {
             teamList: [
                 {
-                    name: '不凡UI设计组',
+                    name: '腾讯UI设计组',
                     icon:
                         'https://bufan-apitown.oss-cn-beijing.aliyuncs.com/bftec/20201120152029983801.jpg'
                 },
                 {
-                    name: '不凡前端开发组',
+                    name: '腾讯前端开发组',
                     icon:
                         'https://bufan-apitown.oss-cn-beijing.aliyuncs.com/bftec/20201120152042345120151821.jpg'
                 },
@@ -128,7 +128,7 @@ export default {
                 {
                     img:
                         'https://bufan-apitown.oss-cn-beijing.aliyuncs.com/bftec/20201120163137052iXjVmWVHbCJAyqvDxdtx.png',
-                    title: '不凡学院',
+                    title: 'Tencent',
                     content: '那是一种内在的东西， 他们到达不了，也无法触及的',
                     time: '1天前',
                     visitorList: [
@@ -140,7 +140,7 @@ export default {
                 {
                     img:
                         'https://bufan-apitown.oss-cn-beijing.aliyuncs.com/bftec/20201120163137052iXjVmWVHbCJAyqvDxdtx.png',
-                    title: '不凡学院',
+                    title: 'Tencent',
                     content: '那是一种内在的东西， 他们到达不了，也无法触及的',
                     time: '1天前',
                     visitorList: [
@@ -152,7 +152,7 @@ export default {
                 {
                     img:
                         'https://bufan-apitown.oss-cn-beijing.aliyuncs.com/bftec/20201120163137052iXjVmWVHbCJAyqvDxdtx.png',
-                    title: '不凡学院',
+                    title: 'Tencent',
                     content: '那是一种内在的东西， 他们到达不了，也无法触及的',
                     time: '1天前',
                     visitorList: [
@@ -164,7 +164,7 @@ export default {
                 {
                     img:
                         'https://bufan-apitown.oss-cn-beijing.aliyuncs.com/bftec/20201120163137052iXjVmWVHbCJAyqvDxdtx.png',
-                    title: '不凡学院',
+                    title: 'Tencent',
                     content: '那是一种内在的东西， 他们到达不了，也无法触及的',
                     time: '1天前',
                     visitorList: [
@@ -176,7 +176,7 @@ export default {
                 {
                     img:
                         'https://bufan-apitown.oss-cn-beijing.aliyuncs.com/bftec/20201120163137052iXjVmWVHbCJAyqvDxdtx.png',
-                    title: '不凡学院',
+                    title: 'Tencent',
                     content: '那是一种内在的东西， 他们到达不了，也无法触及的',
                     time: '1天前',
                     visitorList: [
@@ -188,7 +188,7 @@ export default {
                 {
                     img:
                         'https://bufan-apitown.oss-cn-beijing.aliyuncs.com/bftec/20201120163137052iXjVmWVHbCJAyqvDxdtx.png',
-                    title: '不凡学院',
+                    title: 'Tencent',
                     content: '那是一种内在的东西， 他们到达不了，也无法触及的',
                     time: '1天前',
                     visitorList: [
@@ -200,7 +200,7 @@ export default {
                 {
                     img:
                         'https://bufan-apitown.oss-cn-beijing.aliyuncs.com/bftec/20201120163137052iXjVmWVHbCJAyqvDxdtx.png',
-                    title: '不凡学院',
+                    title: 'Tencent',
                     content: '那是一种内在的东西， 他们到达不了，也无法触及的',
                     time: '1天前',
                     visitorList: [
@@ -212,7 +212,7 @@ export default {
                 {
                     img:
                         'https://bufan-apitown.oss-cn-beijing.aliyuncs.com/bftec/20201120163137052iXjVmWVHbCJAyqvDxdtx.png',
-                    title: '不凡学院',
+                    title: 'Tencent',
                     content: '那是一种内在的东西， 他们到达不了，也无法触及的',
                     time: '1天前',
                     visitorList: [

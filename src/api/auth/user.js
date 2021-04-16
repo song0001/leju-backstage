@@ -1,7 +1,7 @@
+// 引入封装好的axios
 import request from '@/api/request'
-//  账号管理 (用户管理)
 
-// 获取用户分页列表
+// 获取用户列表
 function findUsersByPage(start, limit, data) {
     return request({
         url: `/admin/sysAuth/user/findUsersByPage/${start}/${limit}`,
@@ -9,14 +9,7 @@ function findUsersByPage(start, limit, data) {
         data
     })
 }
-// 删除管理用户
-function removeUser(id) {
-    return request({
-        url: `/admin/sysAuth/user/removeUser/${id}`,
-        method: 'DELETE'
-    })
-}
-// 新增用户
+
 function saveUserRoles(data) {
     return request({
         url: '/admin/sysAuth/user/saveUserRoles',
@@ -24,7 +17,6 @@ function saveUserRoles(data) {
         data
     })
 }
-// 更新用户
 function updateUserRoles(data) {
     return request({
         url: '/admin/sysAuth/user/updateUserRoles',
@@ -33,18 +25,28 @@ function updateUserRoles(data) {
     })
 }
 
-// 获取用户明细
-function user(userId) {
+function removeUser(id) {
+    return request({
+        url: `/admin/sysAuth/user/removeUser/${id}`,
+        method: 'DELETE'
+    })
+}
+/**
+ * 根据用户id获取角色
+ * @param {} userId
+ */
+function findUserInfo(userId) {
     return request({
         url: `/admin/sysAuth/user/${userId}`,
         method: 'GET'
     })
 }
 
-export {
+export default {
     findUsersByPage,
-    removeUser,
     saveUserRoles,
     updateUserRoles,
-    user
+    findUserInfo,
+    removeUser
+
 }

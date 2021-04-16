@@ -1,117 +1,167 @@
-<template >
-  <div>
-    <el-card class="card" shadow="never">
+<template>
+  <div class="user-main">
 
-    </el-card>
-    <!-- 角色列表 -->
-    <el-card class="card">
-      <div slot="header">
-        <el-button type="primary" size="mini">新增角色</el-button>
-      </div>
-      <el-table border :data="userRoleList" style="width: 100%">
-        <el-table-column
-          fixed="left"
-          type="index"
-          prop="date"
-          label="#"
-          align="center"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="roleName"
-          label="角色名称"
-          align="center"
-          width="120"
-        >
-        </el-table-column>
-         <el-table-column label="角色编码" prop="roleCode" width="200" align="center" />
-          
-          <el-table-column label="备注" prop="remark" align="center" width="300" />
-          <el-table-column label="添加时间" prop="createTime"  align="center"  />
-        <el-table-column label="操作" width="300"  align="center">
-          <template slot-scope="scope">
-            <el-button type="success" size="mini" @click="edit(scope.row)"
-              >编辑</el-button
-            >
-            <el-button type="danger" size="mini" @click="del(scope.row)"
-              >删除</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        :current-page="page.currentPage"
-        :page-sizes="page.pageSizes"
-        :page-size="page.size"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="page.total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      >
-      </el-pagination>
-    </el-card>
+    <div class="container">
+      <el-card class="card" shadow="never">
+        <div slot="header">
+          <el-button type="primary" size="small" @click="goAdd">新增角色</el-button>
+        </div>
+        <el-table :data="roleList" border stripe>
+          <el-table-column
+            label="#"
+            type="index"
+            width="50"
+            fixed
+          />
+          <el-table-column
+            label="角色名称"
+            prop="roleName"
+            width="200"
+            fixed
+          />
+          <el-table-column
+            label="角色编码"
+            prop="roleCode"
+            width="200"
+          />
+
+          <el-table-column
+            label="备注"
+            prop="remark"
+          />
+          <el-table-column
+            label="添加时间"
+            prop="createTime"
+            width="200"
+          />
+          <el-table-column
+            label="操作"
+            prop="nickName"
+            width="300"
+          >
+            <template slot-scope="scope">
+              <el-button type="success" size="mini" @click="goEdit(scope.row.id)">编辑</el-button>
+              <el-button type="error" size="mini" @click="goDel(scope.row.id)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- 分页 -->
+        <el-pagination
+          style="margin-top: 30px;text-align:right;"
+          :current-page.sync="page.start"
+          :page-sizes="page.sizes"
+          :page-size="page.limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="page.totalCount"
+          @size-change="sizeChange"
+          @current-change="currentChange"
+        />
+
+      </el-card>
+
+    </div>
+    <RoleForm ref="roleForm" :menu-list="menuList" @refresh="getRoleList" />
+
   </div>
 </template>
-<script>
-import {
-    findRolesByPage,
-    removeRole,
-    saveRolePermissions,
-    updateRolePermissions,
-    findAllRoles,
-    role
-} from '@/api/auth/role'
-import mixin from '@/mixins/index'
-export default {
-  mixins: [mixin],
-  data() {
-    return {
-      userRoleList:[]
-    }
-  },
-  created() {
-    this.getRoleInfo()
-  },
-  methods: {
-    // 获取角色信息
-    getRoleInfo() {
-      findRolesByPage(
-        this.page.currentPage,
-        this.page.size
-      ).then((res) => {
-        console.log(res)
-        this.userRoleList = res.data.rows
-        this.page.total = res.data.total
-      })
-    },
-    edit(row) {
-      //编辑
-      console.log(row)
-    },
-    del(row) {
-      //删除
-      console.log(row)
-    },
 
-    // 改变每页显示数量
-    handleSizeChange(val) {
-      this.page.size = val
-      this.page.currentPage = 1
-      this.getRoleInfo()
+<script>
+import roleApi from '@/api/auth/role'
+import permissionApi from '@/api/auth/permission'
+import RoleForm from './components/RoleForm'
+export default {
+    name: 'AuthUser',
+    components: {
+        RoleForm
     },
-    // 切换当前页码
-    handleCurrentChange(val) {
-      this.page.currentPage = val
-      this.getRoleInfo()
+    data() {
+        return {
+            search: {
+                username: 'abc'
+            },
+            roleList: [],
+            page: {
+                start: 1,
+                limit: 10,
+                sizes: [10, 20, 30, 40],
+                totalCount: 0
+            },
+            menuList: []
+        }
     },
- 
-  }
+    created() {
+        this.getRoleList()
+        this.getAllMenuList()
+    },
+    methods: {
+        goAdd() {
+            this.$refs.roleForm.openDialog()
+        },
+        goEdit(id) {
+            this.$refs.roleForm.openDialog(id)
+        },
+        getRoleList() {
+            roleApi.findRolesByPage(this.page.start, this.page.limit)
+                .then(res => {
+                    if (res.success) {
+                        this.roleList = res.data.rows
+                        this.page.totalCount = res.data.total
+                    } else {
+                        this.$message.error(res.message)
+                    }
+                })
+        },
+        doReset() {
+            // 重置表单  前提:prop属性必须存在
+            this.$refs.searchForm.resetFields()
+        },
+        doSearch() {
+
+        },
+        sizeChange(v) {
+
+        },
+        currentChange(v) {
+
+        },
+        // 初始化所有菜单备用
+        getAllMenuList() {
+            permissionApi.findAllPermissions().then((res) => {
+                if (res.success) {
+                    this.menuList = res.data.menus
+                } else {
+                    this.$message.error('获取数据失败!')
+                }
+                this.loading = false
+            })
+        },
+        goDel(id) {
+            this.$confirm('确认删除角色?')
+                .then(res => {
+                    roleApi.removeRole(id)
+                        .then(res => {
+                            if (res.success) {
+                                this.$message.success('删除成功!')
+                                this.getRoleList()
+                            } else {
+                                this.$message.error('删除失败')
+                            }
+                        })
+                })
+        }
+
+    }
 }
 </script>
+
 <style lang="scss" scoped>
-@import '@/styles/myScss.scss';
-.avatar-img{
-  width: 100px;
-  height: 100px;
-}
+  .user-main{
+    .card{
+      margin: 30px;
+    }
+    .avatar-img{
+      width: 120px;
+      height: 80px;
+    }
+  }
 </style>

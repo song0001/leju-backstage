@@ -19,11 +19,11 @@
             </div>
             <div class="text">
               <i class="el-icon-s-check" />
-              不凡学院－某某某事业群－某某平台部－某某技术部－UED
+              腾讯－某某某事业群－某某平台部－某某技术部－UED
             </div>
             <div class="text">
               <i class="el-icon-location-outline" />
-              河南省 郑州市 金水区 绿地新都会
+              深圳市南山区科技园科技中一路
             </div>
           </div>
           <div class="slide_item">
@@ -175,7 +175,7 @@ export default {
             activeName: 'first', // tabl触发第几个
             isInput: false,
             tag: '',
-            tagList: ['不凡人', '学霸', '专业设计', '高颜值', '随便', '无所谓']
+            tagList: ['腾讯人', '学霸', '专业设计', '高颜值', '随便', '无所谓']
         }
     },
     computed: {
