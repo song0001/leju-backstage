@@ -7,14 +7,14 @@ function resolve(dir) {
 }
 
 const name = defaultSettings.title || 'vue Admin Template' // page title
-const host = defaultSettings.host // 从setting拿过来地址
+
 // If your port is set to 80,
 // use administrator privileges to execute the command line.
 // For example, Mac: sudo npm run
 // You can change the port by the following methods:
 // port = 9528 npm run dev OR npm run dev --port = 9528
-const port = process.env.port || process.env.npm_config_port || 9528 // dev port
-
+const port = process.env.port || process.env.npm_config_port || 8080 // dev port
+const host = defaultSettings.host
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
   /**
@@ -24,10 +24,22 @@ module.exports = {
      * In most cases please use '/' !!!
      * Detail: https://cli.vuejs.org/config/#publicpath
      */
+  // 跨域
+  //   1. 开发
+  //     a) webpack devServer  proxy 配置代理
+  //     b) cors 后台配置跨域资源共享 可以实现前台无感知请求数据
+  //     c) nginx 解决跨域
+  //   2. 生成环境
+  //     a) 集成到后台  不存在跨域了
+  //     b) 如果是前台独立部署
+  //       i) 后他开启cors配置
+  //       ii) 前台发送的是相对请求,改成绝对地址 axios.baseURL
+
+  // 打包的时候用  参照后台的命名空间
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
-  lintOnSave: process.env.NODE_ENV === 'development',
+  lintOnSave: true,
   productionSourceMap: false,
   devServer: {
     port: port,
@@ -36,8 +48,17 @@ module.exports = {
       warnings: false,
       errors: true
     },
+    //  http://bufanui.com:80 (80可以省略不写,所有的没有显示端口的域名都是80端口)
+    // 跨域 :  协议  域名  端口 任意一个不同 就会产生跨域
+    // 浏览器的同源策略导致的 在页面中 通过js语法访问其他域的数据会被限制
+    // 解决跨域:
+    // 1. 如果是开发阶段,可以通过配置webpack.devServer.proxy 来解决
+    // 2. 如果打包部署继承到了后台,webpack失效,但是也不存在跨域了(协议,域名,端口都一致了)
+    // 3. 特殊> 如果打包后,前台项目单独部署(apache/nginx等启动),跨域依然存在
+    //     - a.后台配置cors忽略跨域请求的主机
+    //         .  https://developer.mozilla.org/zh-TW/docs/Web/HTTP/CORS
+    //     - b.后台配置nginx
 
-    // proxy对象  webpack给我们配置的一个代理
     proxy: {
       // 配置代理 希望拦截当前的host地址 替换为目标地址
       // key: {}   ;  key为拦截的规则,可以是正则表达式
@@ -58,8 +79,9 @@ module.exports = {
       // },
 
     }
+    // 用mock模拟的一个登陆服务  开发时不需要的  包括整个的登陆逻辑
+    // after: require('./mock/mock-server.js')
   },
-
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
@@ -71,17 +93,8 @@ module.exports = {
     }
   },
   chainWebpack(config) {
-    // it can improve the speed of the first screen, it is recommended to turn on preload
-    config.plugin('preload').tap(() => [{
-      rel: 'preload',
-      // to ignore runtime.js
-      // https://github.com/vuejs/vue-cli/blob/dev/packages/@vue/cli-service/lib/config/app.js#L171
-      fileBlacklist: [/\.map$/, /hot-update\.js$/, /runtime\..*\.js$/],
-      include: 'initial'
-    }])
-
-    // when there are many pages, it will cause too many meaningless requests
-    config.plugins.delete('prefetch')
+    config.plugins.delete('preload') // TODO: need test
+    config.plugins.delete('prefetch') // TODO: need test
 
     // set svg-sprite-loader
     config.module
@@ -99,6 +112,23 @@ module.exports = {
         symbolId: 'icon-[name]'
       })
       .end()
+
+    // set preserveWhitespace
+    config.module
+      .rule('vue')
+      .use('vue-loader')
+      .loader('vue-loader')
+      .tap(options => {
+        options.compilerOptions.preserveWhitespace = true
+        return options
+      })
+      .end()
+
+    config
+    // https://webpack.js.org/configuration/devtool/#development
+      .when(process.env.NODE_ENV === 'development',
+        config => config.devtool('cheap-source-map')
+      )
 
     config
       .when(process.env.NODE_ENV !== 'development',
@@ -135,7 +165,6 @@ module.exports = {
                 }
               }
             })
-          // https:// webpack.js.org/configuration/optimization/#optimizationruntimechunk
           config.optimization.runtimeChunk('single')
         }
       )
