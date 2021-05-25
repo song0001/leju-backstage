@@ -87,12 +87,7 @@
             <img class="list_img" :src="scope.row.coverImg" alt="" />
           </template>
         </el-table-column>
-        <el-table-column
-          prop="createTime"
-          label="添加时间"
-          align="center"
-       
-        >
+        <el-table-column prop="createTime" label="添加时间" align="center">
         </el-table-column>
         <el-table-column
           prop="author"
@@ -167,8 +162,18 @@ export default {
       },
     };
   },
+
   created() {
+    // 取出当前页面
+    this.page.currentPage = Number(localStorage.getItem("pagination")) || 1;
     this.init();
+  },
+// 刷新页面保持当前页面 不重置为第一页
+  beforeUpdate() {
+    localStorage.setItem("pagination", this.page.currentPage);
+  },
+  beforeDestroy() {
+    localStorage.setItem("pagination", "1");
   },
   methods: {
     init() {
@@ -201,7 +206,7 @@ export default {
     },
     // 修改文章
     edit(row) {
-      this.$router.push({name:'EditArticle',params:{id:row.id}})
+      this.$router.push({ name: "EditArticle", params: { id: row.id } });
     },
     // 删除
     del(row) {
@@ -245,13 +250,13 @@ export default {
           this.$message.success("更新文章状态成功");
         } else {
           this.$message.error("更新显示状态失败");
-          row.isShow=tempStatus
+          row.isShow = tempStatus;
         }
       });
     },
     // 新增文章
     addContent() {
-      this.$router.push('addArticle')
+      this.$router.push("addArticle");
     },
   },
 };

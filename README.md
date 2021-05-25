@@ -1,6 +1,6 @@
 # 乐居后台管理项目
 
-## 介绍
+## 1.介绍
 
 乐居后台管理是基于element-admin-template实现的一套乐居客户端的后台管理系统 主要包含了以下功能:
 
@@ -24,7 +24,7 @@
 
 > (注:请勿随意删改数据,本项目仅供学习交流使用,禁止商用)
 
-## 使用方法和基本页面展示
+## 2.使用方法和基本页面展示
 
 ### 使用方法
 
@@ -36,7 +36,7 @@
 
 > 注意:该项目需要有node环境
 
-## 主要使用的技术栈
+## 3.主要使用的技术栈
 
 - vue-router
 
@@ -62,7 +62,7 @@
 
 > echarts是百度开发的一款非常强大的数据可视化工具,可以流畅的运行在 PC 和移动设备上，兼容当前绝大部分浏览器（IE8/9/10/11，Chrome，Firefox，Safari等），底层依赖矢量图形库 ZRender，提供直观，交互丰富，可高度个性化定制的数据可视化图表。 官网地址: https://echarts.apache.org/zh/index.html
 
-## 各模块的主要功能简介
+## 4.各模块的主要功能简介
 
 - 主页
 
@@ -146,7 +146,7 @@
 
   > 当前后台管理系统登录的用户的个人设置(暂时只做了样式,预留)
 
-## 部分代码示例
+## 5.部分代码示例
 
 - 登录
 
@@ -371,11 +371,27 @@
     })
   ```
 
-## 组件添加原生点击事件
+## 6.组件添加原生点击事件
 
 ` @click.native` 不加native 点击事件不生效
 
+## 7.添加分页刷新不重置功能
 
+主要结合`created`和`beforeUpdate`两个钩子函数
 
+```
 
+  created() {
+    // 取出当前页面
+    this.page.currentPage = Number(localStorage.getItem("pagination")) || 1;
+    this.init();
+  },
+  beforeUpdate() {
+  // 刷新页面保持当前页面 不重置为第一页
+    localStorage.setItem("pagination", this.page.currentPage);
+  },
+  beforeDestroy() {
+    localStorage.setItem("pagination", "1");
+  }
+```
 
